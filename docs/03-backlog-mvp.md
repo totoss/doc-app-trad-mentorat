@@ -19,10 +19,10 @@ Le MVP est fini quand :
 Six jalons en séquence ; chacun est utilisable avant de passer au suivant. Durées indicatives pour une personne à plein temps, soit 16 semaines au total.
 
 1. **M0 Socle** (2 semaines) : squelettes back et front, auth, blob, normalisation arabe, modèle de contenu, seed des lettres. Stories T01–T06, C01–C03.
-2. **M1 Back-office** (3 semaines) : saisie des lettres, mots, phrases et leçons, enregistrement audio dans le navigateur. La production de contenu démarre ici. Stories A01–A04.
-3. **M2 Piste « Lire »** (3 semaines) : écran lettre avec tracé, parcours par groupes de forme, exercices lettre, lecture de mots courts, clavier virtuel. Stories L01–L03, L05, X06.
+2. **M1 Back-office** (3,5 semaines) : saisie des lettres, mots, phrases et leçons, enregistrement audio dans le navigateur, clavier virtuel (nécessaire à la saisie de ڨ ڤ پ). La production de contenu démarre ici. Stories A01–A04, X06.
+3. **M2 Piste « Lire »** (3 semaines) : écran lettre avec tracé, parcours par groupes de forme, moteur d'exercice, exercices lettre, lecture de mots courts. Stories L01–L03, L05, X01.
 4. **M3 Piste « Parler » et SRS** (3 semaines) : unités de survie, écoute-répétition, FSRS, file de révision du jour. Stories P01–P02, S01–S04.
-5. **M4 Exercices et progression** (3 semaines) : moteur d'exercice, QCM, appariement, phrase à trous, remise en ordre, objectif quotidien et série. Stories X01–X05, G01.
+5. **M4 Exercices et progression** (2,5 semaines) : QCM, appariement, phrase à trous, remise en ordre, objectif quotidien et série. Stories X02–X05, G01.
 6. **M5 Bêta** (2 semaines) : tests, revue RTL et accessibilité, bêta fermée, correctifs. Stories Q01–Q03, puis les « Should » restants.
 
 ## 3. Backlog par épic
@@ -122,7 +122,7 @@ Ce n'est pas du développement, mais c'est le chemin critique : il démarre dès
 | Élément | Volume MVP | Prêt pour | Note |
 | --- | --- | --- | --- |
 | Lettres | 31, avec tracé et mot d'exemple | M2 | seed C03 + audio |
-| Mots | 300 à 400, avec racine et arabizi | M3 | ~50 par unité |
+| Mots | 300 à 400, avec racine et arabizi | M3 | ~40 par unité |
 | Phrases | 150, avec traduction | M3 | ~20 par unité |
 | Unités | 8 à 10 (survie, puis thèmes du quotidien) | M4 | composées dans A04 |
 | Exercices | générés par unité, relus à la main | M4 | X01–X05 |

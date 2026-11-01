@@ -9,7 +9,7 @@ Plan d'implémentation du back-end .NET en architecture hexagonale : un domaine 
 La règle unique : **les dépendances pointent vers le domaine, jamais l'inverse.** Le domaine ne référence ni EF Core, ni ASP.NET, ni aucun SDK ; il ne connaît que ses propres types et les interfaces qu'il expose.
 
 - **Domaine** (`Domain`) : entités, agrégats, value objects, règles métier, événements de domaine, services de domaine (normalisation arabe, scheduler FSRS). Testable sans aucune infrastructure.
-- **Application** (`Application`) : les use cases, un par intention (`PublishLexeme`, `ReviewCard`). C'est là que vivent les **ports** : les ports *entrants* sont les use cases eux-mêmes, les ports *sortants* sont les interfaces dont ils ont besoin (`ILexemeRepository`, `IAudioStore`, `IClock`).
+- **Application** (`Application`) : les use cases, un par intention (`PublishLexeme`, `ReviewCard`). C'est là que vivent les **ports** : les ports *entrants* sont les use cases eux-mêmes, les ports *sortants* sont les interfaces dont ils ont besoin (`ILexemeRepository`, `IAudioStore`). Deux exceptions : `IClock`, partagé, vit dans `SharedKernel`, et `IReviewScheduler` dans `Learning.Domain`, parce que le domaine l'appelle.
 - **Adapters** : tout ce qui touche au monde. *Entrants* : l'API HTTP, les jobs planifiés, le seed. *Sortants* : PostgreSQL via EF Core, le stockage blob, le traitement audio, ASP.NET Identity, l'envoi d'e-mails.
 - **Un hexagone par module.** `Content`, `Learning` et `Identity` ont chacun leur domaine, leurs ports et leurs adapters, et ne se parlent que par leurs ports publics ou par événements. Même déployable, mais frontières nettes : si un jour `Learning` doit sortir dans son propre service, rien dans le code ne s'y oppose.
 - **Pas de framework au milieu.** Pas de médiateur générique : un endpoint injecte son use case et l'appelle. Moins de magie, plus lisible, et les use cases restent des classes ordinaires.
@@ -105,7 +105,7 @@ tests/
 
 ### Noyau partagé
 
-- `ArabicText` : value object construit en NFC, validé contre l'alphabet de la charte (28 lettres + ڨ ڤ پ, pas de harakat, pas de formes de présentation), avec une propriété `Normalized` (alifs unifiés, ى → ي, ة → ه, ق/ڨ selon la charte) servant aux comparaisons et à la recherche.
+- `ArabicText` : value object construit en NFC, validé contre l'alphabet de la charte (28 lettres + ڨ ڤ پ, ى et ة, et les formes de hamza آ أ إ ؤ ئ ء pour les exceptions de la charte ; pas de harakat, pas de formes de présentation), avec une propriété `Normalized` (alifs unifiés, ى → ي, ة → ه, ق/ڨ selon la charte) servant aux comparaisons et à la recherche.
 - `Arabizi` : chaîne latine validée (lettres, 7, 3, 9, tiret, apostrophe).
 - `Variety` (`aeb`), `LoanOrigin` (fr, it, aucun), `AudioRef` (clé blob + durée), `ContentStatus` (brouillon, publié).
 - `Result<T>` et erreurs typées (`NotFound`, `Validation`, `Conflict`, `Forbidden`) ; `IClock` ; `DomainEvent` de base.
@@ -131,7 +131,7 @@ tests/
 | `ReviewLog` | carte, note (1 à 4), date, état avant / après | append-only, jamais modifié |
 | `ExerciseAttempt` | apprenant, exercice, réponse brute, réponse normalisée, correct, date | append-only |
 
-Services de domaine : `IReviewScheduler` (FSRS) et `AnswerChecker` (compare les `Normalized`, tolère la ponctuation et les espaces). Événements : `CardReviewed`, `UnitStarted`, `DailyGoalReached`.
+Services de domaine : `IReviewScheduler` (FSRS, interface déclarée dans le domaine, implémentée en infrastructure) et `AnswerChecker`. Les réponses de l'apprenant ne passent pas par `ArabicText` : `AnswerChecker` enlève d'abord les harakat, puis compare les formes normalisées en tolérant la ponctuation et les espaces. Événements : `CardReviewed`, `UnitStarted`, `DailyGoalReached`.
 
 ### Identity
 
@@ -149,10 +149,10 @@ Chaque port est une interface déclarée dans `Application` (ou `Contracts` pour
 | `IAudioStore` (put, get, delete, URL signée) | sortant | Content | MinIO en local, Azure Blob ou S3 en prod |
 | `IAudioProcessor` (normaliser le volume, encoder Opus / MP3) | sortant | Content | ffmpeg lancé en processus |
 | `ILearnerProfileRepository`, `IUserCardRepository`, `IReviewLogRepository`, `IExerciseAttemptRepository` | sortant | Learning | EF Core, schéma `learning` |
-| `IReviewScheduler` (FSRS) | sortant | Learning | port .NET de py-fsrs, ou implémentation maison |
+| `IReviewScheduler` (FSRS) | sortant, déclaré dans `Learning.Domain` | Learning | port .NET de py-fsrs, ou implémentation maison |
 | `IEmailSender` | sortant | Learning (G03) | SMTP ou API transactionnelle |
 | `ICurrentUser` | sortant | tous | `ClaimsPrincipal` de la requête |
-| `IClock` | sortant | tous | horloge système ; fake en test |
+| `IClock` | sortant, déclaré dans `SharedKernel` | tous | horloge système ; fake en test |
 | `IUnitOfWork` | sortant | tous | `SaveChanges` + transaction du DbContext du module |
 | `IDomainEventDispatcher` | sortant | tous | en mémoire, dans la transaction ; outbox plus tard |
 | Jobs planifiés (`SendDailyReminder`) | entrant | Learning | Hangfire ou Quartz, appelle un use case |
@@ -201,11 +201,11 @@ Un use case = une classe, un input, un `Result<T>`. Les IDs renvoient aux storie
 
 Aligné sur les jalons du backlog ; chaque étape laisse une API testable.
 
-1. **M0 Socle.** `SharedKernel` (`ArabicText`, `Arabizi`, `Result`, `IClock`) avec ses tests ; squelette des trois modules et `Architecture.Tests` qui verrouillent les dépendances dès le premier jour ; `DbContext`, schémas et migrations ; Identity + JWT ; `IAudioStore` avec MinIO en local ; seed des 31 lettres. (T01, T03, T04, T06, C01, C03, T05)
-2. **M1 Back-office.** `Content.Domain` complet ; use cases de saisie, d'audio et de publication ; endpoints admin ; `IAudioProcessor` ffmpeg ; rapport « ce qui manque » ; export JSON. (C02, C04, A01 à A06 côté API)
-3. **M2 Lecture.** Endpoints publiés (alphabet, catalogue, unité) via `Content.Contracts` ; `LearnerProfile` et progression par lettre. (L01 à L03, L05 côté API)
+1. **M0 Socle.** `SharedKernel` (`ArabicText`, `Arabizi`, `Result`, `IClock`) avec ses tests ; squelette des trois modules et `Architecture.Tests` qui verrouillent les dépendances dès le premier jour ; `DbContext`, schémas et migrations ; Identity + JWT ; `IAudioStore` avec MinIO en local ; seed des 31 lettres ; entités d'unité, de leçon et d'exercice. (T01, T03, T04, T06, C01 à C03, T05)
+2. **M1 Back-office.** `Content.Domain` complet ; use cases de saisie, d'audio et de publication ; endpoints admin ; `IAudioProcessor` ffmpeg ; rapport « ce qui manque » ; export JSON. (C04, A01 à A06 côté API)
+3. **M2 Lecture.** Endpoints publiés (alphabet, catalogue, unité) via `Content.Contracts` ; `LearnerProfile` et progression par lettre ; `ExerciseAttempt`, `AnswerChecker` et `SubmitExerciseAttempt`, dont dépendent les exercices sur les lettres. (L01 à L03, L05, X01 côté API)
 4. **M3 SRS.** `UserCard`, `ReviewLog`, `IReviewScheduler` ; `StartUnit`, `GetTodayQueue`, `ReviewCard`. (S01 à S04, P01)
-5. **M4 Exercices et progression.** `ExerciseAttempt`, `AnswerChecker`, `SubmitExerciseAttempt` ; objectif, série, XP, `GetDashboard`. (X01 à X05, G01)
+5. **M4 Exercices et progression.** Types d'exercices restants sur le moteur livré en M2 ; objectif, série, XP, `GetDashboard`. (X02 à X05, G01)
 6. **M5 Bêta.** Tests d'intégration de bout en bout, observabilité, durcissement (CORS, débit, secrets), rappel e-mail si le temps le permet. (Q01, G03)
 
 ## 9. Décisions techniques à trancher

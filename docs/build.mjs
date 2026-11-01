@@ -182,8 +182,12 @@ async function render() {
   });
 
   toc.innerHTML = '';
+  const seen = {};
   main.querySelectorAll('h2, h3').forEach((h) => {
-    h.id = slug(h.textContent);
+    // Deux titres identiques (ex. « Learning » aux §4 et §6) doivent garder des ancres distinctes.
+    const base = slug(h.textContent);
+    seen[base] = (seen[base] || 0) + 1;
+    h.id = seen[base] > 1 ? base + '-' + seen[base] : base;
     const a = document.createElement('a');
     a.href = '#' + id + '/' + h.id; a.textContent = h.textContent; a.className = h.tagName.toLowerCase();
     toc.append(a);

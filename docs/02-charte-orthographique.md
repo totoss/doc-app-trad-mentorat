@@ -15,7 +15,7 @@ Version 0 : des choix par défaut à valider. Cette charte fixe la graphie de r�
 
 ## 2. Consonnes
 
-Les 28 lettres standard plus trois lettres dialectales ; les interdentales ث ذ ظ sont écrites et prononcées. L'arabizi suit les habitudes francophones (*ch* pour ش, *ou* pour la voyelle longue) ; les emphatiques prennent une majuscule.
+Les consonnes de l'alphabet standard (ا est traité avec les voyelles, section 3) plus trois lettres dialectales ; les interdentales ث ذ ظ sont écrites et prononcées. L'arabizi suit les habitudes francophones (*ch* pour ش, *ou* pour la voyelle longue) ; les emphatiques prennent une majuscule.
 
 | Lettre | Son | Arabizi | Exemple | Arabizi | Français |
 | --- | --- | --- | --- | --- | --- |
@@ -63,7 +63,7 @@ Les voyelles longues s'écrivent avec ا و ي ; les voyelles courtes ne s'écri
 | i long | ي | i | زيت | zit | huile |
 | a court | (rien) | a | كلب | kalb | chien |
 | i court | (rien) | i | بنت | bint | fille |
-| ou court | (rien) | ou | خبز | khobz | pain |
+| ou court | (rien) | o | خبز | khobz | pain |
 | voyelle réduite | (rien) | e | كتبت | ktebt | j'ai écrit |
 | e ouvert (emprunts, fin de mot) | ي ou ا | e | كيفاش | kifech | comment |
 
@@ -80,7 +80,7 @@ Règle générale : en script arabe on suit l'usage de l'arabe standard pour ce 
 | Futur | باش détaché | bech | باش نمشي | bech nemchi | j'irai |
 | في (dans) | détaché | fi / fi + article | في الدار | fid-dar | à la maison |
 | ب (avec, par) | collé | b- / bel- | بالكرهبة | bel-karhba | en voiture |
-| ل (à, pour) | collé | l- / lel- | للدار | lel-dar | à la maison |
+| ل (à, pour) | collé | l- / lel- / assimilé | للدار | led-dar | à la maison |
 | و (et) | collé | w- | وانا | w-ena | et moi |
 | Possessif | متاع détaché | mta3 | الكتاب متاعي | el-ktab mta3i | mon livre |
 | Relatif | اللي | elli | الراجل اللي جا | er-rajel elli ja | l'homme qui est venu |
@@ -103,7 +103,7 @@ Règle générale : en script arabe on suit l'usage de l'arabe standard pour ce 
 | Français | Script arabe | Arabizi | Origine |
 | --- | --- | --- | --- |
 | téléphone | تيليفون | tilifoun | fr |
-| portable | بورطابل | porTabl | fr |
+| portable | پورطابل | porTabl | fr |
 | cuisine | كوجينة | koujina | it / fr |
 | bateau | بابور | babour | it (*vapore*) |
 | taxi | طاكسي | Taksi | fr |
