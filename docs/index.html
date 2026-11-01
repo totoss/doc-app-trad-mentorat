@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation du projet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap">
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --text: #1f2328; --muted: #5d6670;
+  --border: #e3e0d8; --accent: #0f6b5c; --accent-soft: #e4f1ee; --code-bg: #f3f1ec;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181c; --surface: #1c2025; --text: #e6e8eb; --muted: #9aa3ad;
+    --border: #2d333b; --accent: #5cc7b2; --accent-soft: #1e3a35; --code-bg: #22272e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181c; --surface: #1c2025; --text: #e6e8eb; --muted: #9aa3ad;
+  --border: #2d333b; --accent: #5cc7b2; --accent-soft: #1e3a35; --code-bg: #22272e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr) 220px; min-height: 100vh; }
+nav.docs, aside.toc {
+  position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto;
+  padding: 24px 16px; font-size: 14px;
+}
+nav.docs { border-inline-end: 1px solid var(--border); background: var(--surface); min-height: 100vh; }
+nav.docs h1 { font-size: 15px; margin: 0 0 4px; }
+nav.docs p { margin: 0 0 20px; color: var(--muted); font-size: 13px; }
+nav.docs a, aside.toc a {
+  display: block; padding: 6px 10px; border-radius: 6px; color: var(--text); text-decoration: none;
+}
+nav.docs a:hover, aside.toc a:hover { background: var(--accent-soft); }
+nav.docs a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+nav.docs .num { color: var(--muted); margin-inline-end: 6px; font-variant-numeric: tabular-nums; }
+aside.toc h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 8px; }
+aside.toc a { padding: 3px 10px; color: var(--muted); }
+aside.toc a.h3 { padding-inline-start: 22px; font-size: 13px; }
+main { padding: 32px 48px 80px; max-width: 980px; }
+main h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 4px; }
+main h1 + p { color: var(--muted); margin-top: 0; }
+main h2 { margin-top: 2.4em; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+main h3 { margin-top: 1.8em; }
+main h2, main h3 { scroll-margin-top: 16px; }
+code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+pre { background: var(--code-bg); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+pre.mermaid { background: var(--surface); border: 1px solid var(--border); text-align: center; }
+.table-wrap { overflow-x: auto; margin: 1em 0; border: 1px solid var(--border); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--surface); }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: start; vertical-align: top; }
+th { background: var(--code-bg); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+li:has(> input[type="checkbox"]) { list-style: none; margin-inline-start: -1.4em; }
+input[type="checkbox"] { accent-color: var(--accent); margin-inline-end: 6px; }
+.ar { font-family: "Noto Naskh Arabic", "Geeza Pro", serif; font-size: 1.3em; line-height: 1.4; unicode-bidi: isolate; }
+.theme-btn {
+  margin-top: 20px; width: 100%; padding: 6px 10px; border: 1px solid var(--border);
+  border-radius: 6px; background: transparent; color: var(--text); font: inherit; cursor: pointer;
+}
+.menu-btn { display: none; }
+@media (max-width: 1100px) { .layout { grid-template-columns: 240px minmax(0, 1fr); } aside.toc { display: none; } }
+@media (max-width: 760px) {
+  .layout { display: block; }
+  nav.docs { position: static; min-height: 0; max-height: none; border-inline-end: 0; border-bottom: 1px solid var(--border); padding: 12px 16px; }
+  nav.docs .links { display: none; }
+  nav.docs.open .links { display: block; }
+  .menu-btn { display: inline-block; float: inline-end; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text); font: inherit; }
+  nav.docs p { margin-bottom: 0; }
+  main { padding: 20px 16px 60px; }
+  main h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="docs" aria-label="Documents">
+    <button class="menu-btn" aria-expanded="false">Menu</button>
+    <h1>Appli d'apprentissage du tunisien</h1>
+    <p>Documentation du projet</p>
+    <div class="links">
+      <a href="#01-cadrage"><span class="num">01</span>Appli d'apprentissage de l'arabe — Cadrage</a>
+      <a href="#02-charte-orthographique"><span class="num">02</span>Charte orthographique du tunisien</a>
+      <a href="#03-backlog-mvp"><span class="num">03</span>Backlog MVP</a>
+      <a href="#04-plan-back-end"><span class="num">04</span>Plan back-end</a>
+      <button class="theme-btn" type="button">Basculer clair / sombre</button>
+    </div>
+  </nav>
+  <main id="content"></main>
+  <aside class="toc" aria-label="Sur cette page"><h2>Sur cette page</h2><div id="toc"></div></aside>
+</div>
+<script type="text/markdown" id="md-01-cadrage">
+# Appli d'apprentissage de l'arabe — Cadrage
+
+26 octobre 2026
+
+## Contexte
+
+Webapp d'apprentissage de l'arabe pour francophones : back-end .NET, front Angular, PWA dès le squelette pour une intégration mobile ultérieure (pas d'application native pour l'instant).
+
+L'arabe n'est pas une langue « comme les autres » à enseigner, et la plupart des apps généralistes le traitent mal. Ses spécificités conditionnent les features avant la stack : c'est par là que commence le cadrage.
+
+## 1. Les spécificités du tunisien qui dictent les features
+
+### Dialecte tunisien : décidé, avec deux prérequis
+
+L'app enseigne le tunisien (code ISO 639-3 `aeb`) dans sa variante de Zarzis (Sud-Est), pas l'arabe standard. Le tunisien n'a pas d'orthographe officielle : les natifs l'écrivent en lettres arabes avec des conventions variables, et surtout en « arabizi » (lettres latines + chiffres : 7 = ح, 3 = ع).
+
+Deux prérequis avant le premier mot saisi en base :
+
+- Une **charte orthographique** en script arabe (écriture de ڨ, des voyelles réduites, des emprunts) : c'est la cible d'apprentissage.
+- Un **système de translittération** unique, arabizi populaire recommandé : c'est ce que l'apprenant lira dans les messages de sa famille. Affiché comme béquille au début, retiré progressivement.
+
+Le champ `variety` reste dans le modèle, à `aeb` par défaut, pour ne pas fermer la porte à d'autres parlers.
+
+### L'écriture : un module à part entière
+
+- 28 lettres × 4 formes (isolée / initiale / médiane / finale), lettres qui ne se lient pas à gauche, sens d'écriture. Le navigateur gère le *shaping*, mais l'apprenant doit l'apprendre explicitement.
+- Trois lettres supplémentaires propres au dialecte : ڨ (g des emprunts), ڤ (v), پ (p), à prévoir dans l'alphabet, la police et le clavier.
+- Voyelles courtes souvent réduites (*ktebt*, *khdemt*) et non écrites : pas de harakat dans les premières itérations, l'audio et l'arabizi sont les référents de prononciation. Le champ `arabic_vocalized` est prévu mais reste vide.
+- Lettres solaires et lunaires (assimilation de l'article), hamza non écrite, tā' marbūṭa.
+- Saisie : la plupart des francophones n'ont pas de clavier arabe. Clavier virtuel tunisien dès le MVP, et exercices de reconstruction (glisser les lettres) avant les exercices de frappe.
+
+### La phonologie
+
+ع ح ق خ غ ص ض ط ظ ء n'existent pas en français. Bonne nouvelle tunisienne : les interdentales ث ذ ظ sont conservées, donc l'alphabet s'enseigne presque entier. Dans le parler de Zarzis, ق se prononce /g/ dans presque tous les mots : on l'écrit ق et on l'enseigne comme « la lettre qui se lit g », sauf liste d'exceptions (voir la charte). Audio natif obligatoire, paires minimales (كلب / قلب), et plus tard « s'enregistrer et comparer ».
+
+### La morphologie racine / schème
+
+C'est la grande opportunité que les apps génériques ratent : montrer que كتب → كاتب / مكتب / مكتبة / كتاب partagent une racine est un accélérateur énorme. Cela impose de modéliser la **racine** et le **schème** dans le modèle de données dès le départ. La grammaire propre au tunisien (conjugaison n- / n-…-u, futur باش, négation ما…ش) s'enseigne en phase 2.
+
+### Les emprunts, un atout pour les francophones
+
+Le tunisien est truffé d'emprunts au français et à l'italien (تيليفون, بورطابل, كوجينة, بابور). Les taguer « mots transparents » donne au débutant des victoires rapides dès la première semaine.
+
+## 2. Périmètre fonctionnel par phases
+
+### MVP : ce qui fait qu'un utilisateur revient
+
+Premier chantier : le back-office, parce que la production de contenu démarre avant tout le reste.
+
+- **Back-office contenu** (rôle admin) : saisie des lettres, mots, phrases, leçons et exercices directement en base ; enregistrement audio depuis le navigateur ; statut brouillon / publié ; export JSON de sauvegarde.
+- **Piste « Lire »** : alphabet tunisien (28 lettres + ڨ ڤ پ), groupé par forme (ب ت ث ن ي, puis ج ح خ, …) et ordonné par fréquence, audio, tracé animé (SVG), écriture guidée sur canvas (sans reconnaissance au début).
+- **Piste « Parler »**, en parallèle dès le premier jour : phrases de survie en audio + arabizi, script arabe affiché mais non exigé. Les deux pistes fusionnent une fois l'alphabet acquis, pour éviter l'effet « je ne peux rien dire avant trois semaines ».
+- Vocabulaire avec **répétition espacée** : algorithme FSRS plutôt que SM-2 (nettement meilleur, implémentations .NET existantes). Chaque carte : arabe, arabizi, français, audio, exemple, racine, tag « mot transparent ».
+- 3 à 4 types d'exercices : QCM, appariement, phrase à trous, remise en ordre, avec le clavier virtuel tunisien. Correction tolérante (voir §4).
+- Progression : objectif quotidien, série, file de révision du jour.
+- Auth, profil, sauvegarde serveur.
+
+### Phase 2
+
+- Leçons structurées (unités A1 → A2) avec explications grammaticales en français : conjugaison n- / n-…-u, futur باش, négation ما…ش, interrogatifs (شنوة, وين, كيفاش).
+- Dictée audio, saisie au clavier sans aide.
+- PWA offline : révisions mises en cache dans IndexedDB, synchronisation au retour réseau.
+- Dictionnaire par racine, filtre « mots transparents ».
+
+### Phase 3
+
+- Dialogues de lecture avec traduction au clic, contenus audio longs.
+- « S'enregistrer et comparer » à la voix native. Pas d'évaluation automatique : aucun service (Azure Speech, Whisper) ne note le tunisien de façon fiable.
+- Tuteur conversationnel LLM contraint à la charte orthographique, decks créés par l'utilisateur.
+
+## 3. Architecture proposée
+
+### Back (.NET)
+
+ASP.NET Core Web API en monolithe modulaire, avec trois domaines bien séparés : `Content` (lettres, mots, phrases, leçons — écrit par les admins, lu par tous), `Learning` (état SRS, revues, progression — très écrit) et `Identity`. Clean architecture légère, sans sur-découpage au départ.
+
+- **PostgreSQL** + EF Core : support Unicode solide, collations, full-text ; `jsonb` pratique pour les contenus d'exercices hétérogènes.
+- Contenu en base, administré via une API admin : entités `Letter`, `Lexeme`, `Sentence`, `Lesson`, `Exercise` avec statut brouillon / publié et horodatage ; les apprenants ne voient que le publié. Seed JSON uniquement pour amorcer un environnement, export JSON pour la sauvegarde.
+- Auth : ASP.NET Identity + JWT avec deux rôles (`learner`, `admin`) ; OpenIddict si un vrai serveur OAuth devient nécessaire.
+- Audios et images en blob (Azure Blob, S3 ou MinIO), jamais en base ; normalisation du volume et encodage Opus/MP3 à l'upload.
+- Job scheduler (Hangfire ou Quartz) pour les rappels et notifications push, pas pour le SRS lui-même (qui se calcule à la revue).
+
+### Front (Angular)
+
+Composants standalone + signals, `@angular/pwa` dès le squelette (gratuit à mettre tôt, pénible à ajouter tard).
+
+- Module `admin` chargé à la demande et protégé par rôle : formulaires de saisie, enregistrement audio via `MediaRecorder`, prévisualisation des exercices tels que l'apprenant les verra.
+- RTL : `dir="rtl"` au niveau du composant arabe, **propriétés CSS logiques** (`margin-inline-start` plutôt que `margin-left`) partout, sinon tout le CSS est à reprendre plus tard.
+- Typographie : Noto Naskh Arabic ou Amiri (les deux couvrent ڨ ڤ پ), tailles généreuses — les harakat sont illisibles en dessous de ~24 px.
+- Audio : `HTMLAudioElement` pour la lecture ; `MediaRecorder` dès le MVP côté admin, en phase 3 côté apprenant.
+- Canvas pour l'écriture ; un service d'état local (IndexedDB via Dexie) pour la file de révision offline.
+
+## 4. Les pièges techniques à régler dès le départ
+
+- **Fixer la charte orthographique avant la première saisie** et la ranger dans le back-office : chaque incohérence saisie se retrouve dans les exercices.
+- **Normalisation Unicode** : NFC partout. Pour comparer une réponse, enlever les harakat (plage U+064B–U+0652, U+0670), unifier les alifs (أ إ آ → ا), tolérer ى/ي et ة/ه en fin de mot, et ق/ڨ selon la charte. Sinon les exercices de saisie seront injustes.
+- Ne jamais stocker les formes de présentation (U+FB50–U+FDFF) ; laisser le navigateur faire le *shaping*.
+- Modéliser `Lexeme` avec : `arabic`, `arabic_vocalized` (vide dans les premières itérations), `latin` (arabizi), `french`, `pos`, `root_id`, `pattern`, `gender`, `plural` (les pluriels brisés sont irréguliers, il faut les stocker), `variety` (défaut `aeb`), `loan_origin` (fr / it / aucun), `audio_url`, `status`.
+- Modéliser `Letter` avec un flag `extended` (ڨ ڤ پ), un groupe de forme et un ordre d'enseignement.
+- Séparer `Card` (contenu) de `UserCard` (état SRS : `due`, `stability`, `difficulty`, `reps`) et garder un `ReviewLog` : c'est ce qui permettra plus tard de recalibrer l'algorithme sur les vraies données.
+
+## 5. Ce qu'il faut trancher avant de coder
+
+Trois décisions, par ordre d'impact :
+
+- [x] **MSA ou dialecte ?** → **Tunisien, parler de Zarzis** (`aeb`). Décision pédagogique qui conditionne contenu, audio et outils vocaux.
+- [x] **Qui produit le contenu ?** → **Auto-produit, saisi directement en base via le back-office** (pas de CSV intermédiaire). C'est le vrai goulot d'étranglement, bien plus que le code.
+- [x] **Quel public ?** → **Débutant complet qui ne lit pas l'alphabet.**
+
+Les trois points sont fixés ; l'étape suivante est la charte orthographique, puis une spec détaillée et un backlog priorisé pour le MVP, back-office en tête.
+
+Voir aussi : `02-charte-orthographique.md`, `03-backlog-mvp.md`, `04-plan-back-end.md`.
+
+</script>
+<script type="text/markdown" id="md-02-charte-orthographique">
+# Charte orthographique du tunisien
+
+26 octobre 2026
+
+Version 0 : des choix par défaut à valider. Cette charte fixe la graphie de référence de l'app, en script arabe (cible d'apprentissage) et en arabizi (béquille), pour le parler de Zarzis (Sud-Est tunisien). Toute entrée saisie en base la suit, et la normalisation des réponses (§4 du cadrage) en découle.
+
+## 1. Principes
+
+1. **Une graphie par mot.** Chaque lexème a une seule forme en base ; les variantes acceptées à la correction sont gérées par la normalisation, jamais par une seconde saisie.
+2. **Le script arabe est la cible, l'arabizi la béquille.** L'arabizi est affiché dans les premières unités, puis masqué par défaut ; il n'est jamais demandé en réponse.
+3. **Le parler de référence est celui de Zarzis** : il fixe la prononciation, l'arabizi et le vocabulaire. En script arabe, on écrit comme un natif soigneux : pas de hamza, voyelles courtes non écrites, interdentales conservées, ق étymologique même quand il se prononce g, lettres ڨ ڤ پ pour les g, v, p des emprunts.
+4. **L'arabizi reflète la prononciation de Zarzis**, pas la graphie arabe : *gal* (قال), *ech-chams* (الشمس) ; chiffres 7 et 3, le 9 seulement pour les rares /q/ conservés ; emphatiques en majuscules.
+5. **Pas de harakat dans les premières itérations** : la prononciation passe par l'audio et l'arabizi.
+6. **En cas de doute, on tranche et on note la décision** dans la table de la section 6 ; la charte est affichée dans le back-office.
+
+## 2. Consonnes
+
+Les 28 lettres standard plus trois lettres dialectales ; les interdentales ث ذ ظ sont écrites et prononcées. L'arabizi suit les habitudes francophones (*ch* pour ش, *ou* pour la voyelle longue) ; les emphatiques prennent une majuscule.
+
+| Lettre | Son | Arabizi | Exemple | Arabizi | Français |
+| --- | --- | --- | --- | --- | --- |
+| ب | b | b | باب | bab | porte |
+| ت | t | t | تونس | Tounes | Tunisie |
+| ث | th (interdental sourd) | th | ثلاثة | thlatha | trois |
+| ج | j | j | جديد | jdid | nouveau |
+| ح | h pharyngal | 7 | حوت | 7out | poisson |
+| خ | kh | kh | خبز | khobz | pain |
+| د | d | d | دار | dar | maison |
+| ذ | dh (interdental sonore) | dh | ذيب | dhib | loup |
+| ر | r roulé | r | راجل | rajel | homme |
+| ز | z | z | زيت | zit | huile |
+| س | s | s | سوق | soug | marché |
+| ش | ch | ch | شمس | chams | soleil |
+| ص | s emphatique | S | صباح | Sba7 | matin |
+| ض | d emphatique | D | ضيف | Dif | invité |
+| ط | t emphatique | T | طاولة | Tawla | table |
+| ظ | dh emphatique | DH | نظيف | nDHif | propre |
+| ع | pharyngale sonore | 3 | عسلامة | 3aslema | bonjour |
+| غ | gh (r grasseyé) | gh | غالي | ghali | cher |
+| ف | f | f | فلوس | flous | argent |
+| ق | g (q dans quelques mots classiques) | g (9 si /q/) | قهوة | gahwa | café |
+| ڨ | g (emprunts) | g | ڨاتو | gatou | gâteau |
+| ك | k | k | كرهبة | karhba | voiture |
+| ل | l | l | ليل | lil | nuit |
+| م | m | m | مدينة | mdina | ville |
+| ن | n | n | نار | nar | feu |
+| ه | h léger | h | هنا | hna | ici |
+| و | w (consonne) | w | وقت | wagt | temps |
+| ي | y (consonne) | y | يوم | youm | jour |
+| ڤ | v (emprunts) | v | ڤيلا | villa | villa |
+| پ | p (emprunts) | p | پيتزا | pitza | pizza |
+
+ا و ي servent aussi de voyelles longues (section 3). La hamza ء n'est pas écrite (section 5).
+
+## 3. Voyelles et harakat
+
+Les voyelles longues s'écrivent avec ا و ي ; les voyelles courtes ne s'écrivent pas en script arabe, comme chez les natifs. L'arabizi, lui, note toutes les voyelles prononcées.
+
+| Son | Script arabe | Arabizi | Exemple | Arabizi | Français |
+| --- | --- | --- | --- | --- | --- |
+| a long | ا | a | كتاب | ktab | livre |
+| ou long | و | ou | حوت | 7out | poisson |
+| i long | ي | i | زيت | zit | huile |
+| a court | (rien) | a | كلب | kalb | chien |
+| i court | (rien) | i | بنت | bint | fille |
+| ou court | (rien) | ou | خبز | khobz | pain |
+| voyelle réduite | (rien) | e | كتبت | ktebt | j'ai écrit |
+| e ouvert (emprunts, fin de mot) | ي ou ا | e | كيفاش | kifech | comment |
+
+**Harakat** : aucun dans les premières itérations. Le champ `arabic_vocalized` reste vide et réservé à une version ultérieure ; la prononciation s'apprend par l'audio et l'arabizi.
+
+## 4. Mots-outils et clitiques
+
+Règle générale : en script arabe on suit l'usage de l'arabe standard pour ce qui se colle ou non ; en arabizi on écrit ce qu'on entend, avec un tiret aux frontières de clitiques.
+
+| Élément | Script arabe | Arabizi | Exemple | Arabizi | Français |
+| --- | --- | --- | --- | --- | --- |
+| Article | ال toujours écrit, même assimilé | el- / assimilé | الشمس | ech-chams | le soleil |
+| Négation | ما détaché + ش collé au verbe | ma … ch | ما مشيتش | ma mchitech | je ne suis pas allé |
+| Futur | باش détaché | bech | باش نمشي | bech nemchi | j'irai |
+| في (dans) | détaché | fi / fi + article | في الدار | fid-dar | à la maison |
+| ب (avec, par) | collé | b- / bel- | بالكرهبة | bel-karhba | en voiture |
+| ل (à, pour) | collé | l- / lel- | للدار | lel-dar | à la maison |
+| و (et) | collé | w- | وانا | w-ena | et moi |
+| Possessif | متاع détaché | mta3 | الكتاب متاعي | el-ktab mta3i | mon livre |
+| Relatif | اللي | elli | الراجل اللي جا | er-rajel elli ja | l'homme qui est venu |
+| Suffixes pronominaux | collés : ي ك و ها نا كم هم | -i -ek -ou -ha -na -kom -hom | كتابو | ktabou | son livre |
+| Démonstratifs | هذا هاذي هاذوما | hedha hedhi hedhouma | هذا الراجل | hedha er-rajel | cet homme |
+| Interrogatifs | شنوة وين كيفاش علاش وقتاش شكون قداش | chnouwa win kifech 3lech wagtech chkoun gaddech | وين الدار ؟ | win ed-dar ? | où est la maison ? |
+
+## 5. Hamza, fins de mots, emprunts
+
+**Hamza** : jamais écrite. À l'initiale, alif nu (انا *ena*, اسم *esm*) ; au milieu et à la fin, elle disparaît ou devient voyelle longue (راس *ras*, سما *sma*, ما *ma*). Exception : les mots repris tels quels de l'arabe standard où le natif la prononce (مسؤول *mas'oul*) ; dans ce cas l'arabizi note une apostrophe.
+
+**Fins de mots** :
+
+- Féminin en ة (مدينة *mdina*, كرهبة *karhba*) ; ه seulement quand on entend un h (وجه *wjeh*).
+- Alif maqsura ى pour les verbes et mots-outils où l'usage l'a fixée (مشى *mcha*, على *3la*, حتى *7atta*) ; sinon ا.
+- Le suffixe « son » s'écrit و (كتابو *ktabou*), pas ه.
+
+**Emprunts** (français, italien) : transcription phonétique en script arabe, voyelles longues sur les syllabes nettes, emphatiques quand le natif les prononce ainsi.
+
+| Français | Script arabe | Arabizi | Origine |
+| --- | --- | --- | --- |
+| téléphone | تيليفون | tilifoun | fr |
+| portable | بورطابل | porTabl | fr |
+| cuisine | كوجينة | koujina | it / fr |
+| bateau | بابور | babour | it (*vapore*) |
+| taxi | طاكسي | Taksi | fr |
+| gâteau | ڨاتو | gatou | fr |
+| villa | ڤيلا | villa | fr |
+
+Ces mots portent `loan_origin` en base et le tag « mot transparent » dans l'app.
+
+## 6. ق ou ڨ : mot par mot
+
+Norme de référence : le parler de Zarzis, où ق se prononce /g/ dans presque tous les mots. En script arabe on garde ق : c'est ce que les natifs écrivent, et ce que l'apprenant lira sur les panneaux et dans les autres parlers ; l'arabizi note *g*. ڨ est réservé aux emprunts et aux mots dont le /g/ ne vient pas d'un ق. Les quelques mots classiques où /q/ est conservé sont à vérifier avec le locuteur ; la table grandit au fil de la saisie.
+
+| Mot | Graphie retenue | Prononcé | Arabizi | Français | Note |
+| --- | --- | --- | --- | --- | --- |
+| قال | ق | g | gal | il a dit | ق étymologique |
+| قهوة | ق | g | gahwa | café | ق étymologique |
+| بقرة | ق | g | bagra | vache | ق étymologique, pas ڨ |
+| قداش | ق | g | gaddech | combien | ق étymologique |
+| قابس، قفصة | ق | g | Gabes, Gafsa | Gabès, Gafsa | graphie officielle |
+| القرآن | ق | q | el-9or'an | le Coran | /q/ conservé, à vérifier |
+| ڨاتو | ڨ | g | gatou | gâteau | emprunt |
+| ڨراج | ڨ | g | garaj | garage | emprunt |
+
+## 7. Choix validés
+
+Décisions prises ; toute modification se fait directement dans les sections concernées.
+
+- [x] Parler de référence : Zarzis. ق écrit, prononcé /g/ (arabizi *g*), ڨ réservé aux emprunts.
+- [x] Arabizi francophone : *ch* pour ش, *ou* pour la voyelle longue, *e* pour la voyelle réduite.
+- [x] Emphatiques en majuscules (S, D, T, DH) plutôt que non distinguées comme dans les SMS.
+- [x] Pas de harakat dans les premières itérations ; champ `arabic_vocalized` réservé.
+- [x] Négation : ما détaché, ش collé (ما مشيتش).
+- [x] Pas de hamza, sauf mots repris de l'arabe standard et prononcés avec.
+- [x] Démonstratifs écrits هذا هاذي هاذوما (et non هاذا).
+
+## 8. Points ouverts, hors MVP
+
+À trancher après le MVP, quand le contenu et un locuteur de référence seront en place. En attendant, le MVP applique les sections 1 à 7 telles quelles.
+
+- [ ] في toujours détaché (في الدار), ب et ل collés (بالكرهبة, للدار) : à confirmer ou à aligner sur l'usage des natifs.
+- [ ] پ écrit quand on entend un p (پيتزا), ou ب comme chez la plupart des natifs.
+- [ ] Voix native des enregistrements : qui, et parle-t-elle le zarzisien ?
+- [ ] Avec le locuteur : les mots où /q/ est conservé (registre religieux ou classique), à ajouter à la table de la section 6.
+- [ ] Avec le locuteur : diphtongues conservées ou non (بيت *bayt* ou *bit*, يوم *yawm* ou *youm*) ; elles changent l'arabizi et les exemples des sections 2 et 3.
+- [ ] Avec le locuteur : marques propres aux parlers du Sud (féminin à la 2ᵉ personne تكتبي, pluriel féminin des verbes), pour les tables de conjugaison de la phase 2.
+- [ ] Avec le locuteur : vocabulaire courant qui diffère de Tunis (interrogatifs, salutations).
+
+</script>
+<script type="text/markdown" id="md-03-backlog-mvp">
+# Backlog MVP
+
+26 octobre 2026
+
+Backlog priorisé du MVP, découpé en épics et en stories, avec un ordre de livraison qui met le back-office en premier. Les tailles sont des ordres de grandeur pour une personne à plein temps (S : une journée, M : deux à trois jours, L : une semaine).
+
+## 1. Objectif du MVP et critère de fin
+
+Un débutant complet, sans clavier arabe, apprend l'alphabet tunisien et 300 mots en huit semaines, en révisant chaque jour grâce à la répétition espacée. Tout le contenu est produit dans le back-office, par toi, selon la charte orthographique.
+
+Le MVP est fini quand :
+
+- les 31 lettres et au moins 8 unités (300 mots, 150 phrases, tous avec audio) sont publiées depuis le back-office ;
+- un nouvel inscrit peut parcourir les pistes « Lire » et « Parler », faire ses révisions du jour et voir sa progression ;
+- 5 à 10 bêta-testeurs débutants ont tenu deux semaines d'usage quotidien et leurs retours bloquants sont corrigés.
+
+## 2. Jalons de livraison
+
+Six jalons en séquence ; chacun est utilisable avant de passer au suivant. Durées indicatives pour une personne à plein temps, soit 16 semaines au total.
+
+1. **M0 Socle** (2 semaines) : squelettes back et front, auth, blob, normalisation arabe, modèle de contenu, seed des lettres. Stories T01–T06, C01–C03.
+2. **M1 Back-office** (3 semaines) : saisie des lettres, mots, phrases et leçons, enregistrement audio dans le navigateur. La production de contenu démarre ici. Stories A01–A04.
+3. **M2 Piste « Lire »** (3 semaines) : écran lettre avec tracé, parcours par groupes de forme, exercices lettre, lecture de mots courts, clavier virtuel. Stories L01–L03, L05, X06.
+4. **M3 Piste « Parler » et SRS** (3 semaines) : unités de survie, écoute-répétition, FSRS, file de révision du jour. Stories P01–P02, S01–S04.
+5. **M4 Exercices et progression** (3 semaines) : moteur d'exercice, QCM, appariement, phrase à trous, remise en ordre, objectif quotidien et série. Stories X01–X05, G01.
+6. **M5 Bêta** (2 semaines) : tests, revue RTL et accessibilité, bêta fermée, correctifs. Stories Q01–Q03, puis les « Should » restants.
+
+## 3. Backlog par épic
+
+Une table par épic. Priorité MoSCoW : les « Must » font le MVP, les « Should » entrent si le jalon est dans les temps, les « Could » attendent la bêta.
+
+### E0 — Socle technique
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| T01 | Squelette back : solution .NET (API, Application, Domain, Infrastructure), EF Core + PostgreSQL, migrations, docker-compose local | M | Must | À faire |
+| T02 | Squelette front : Angular standalone + signals, routing, `@angular/pwa`, thème RTL en propriétés logiques, police Noto Naskh Arabic | M | Must | À faire |
+| T03 | Auth : ASP.NET Identity + JWT, rôles `learner` / `admin`, inscription, connexion, refresh token | M | Must | À faire |
+| T04 | Stockage blob et endpoint d'upload audio : normalisation du volume, encodage Opus/MP3 | M | Must | À faire |
+| T05 | CI : build, tests, lint, déploiement d'un environnement de test | S | Should | À faire |
+| T06 | Bibliothèque de normalisation arabe (NFC, harakat, alifs, ى/ي, ة/ه, ق/ڨ) avec tests tirés de la charte | S | Must | À faire |
+
+### E1 — Modèle de contenu
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| C01 | Entités `Letter`, `Root`, `Lexeme`, `Sentence` : champs de la charte, `variety`, `loan_origin`, `audio_url`, statut brouillon / publié | M | Must | À faire |
+| C02 | Entités `Unit`, `Lesson`, `Exercise` (contenu typé en `jsonb`), ordre d'enseignement | M | Must | À faire |
+| C03 | Seed des 31 lettres : formes, groupe de forme, ordre d'enseignement, flag `extended` | S | Must | À faire |
+| C04 | Export JSON du contenu publié (sauvegarde, réimport) | S | Should | À faire |
+
+### E2 — Back-office
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| A01 | Module `admin` Angular protégé par rôle, navigation, listes avec recherche et filtres (sans audio, brouillons) | M | Must | À faire |
+| A02 | Formulaires lettre, racine, lexème, phrase : champs de la charte, arabizi, clavier virtuel intégré | L | Must | À faire |
+| A03 | Enregistrement audio dans le navigateur (`MediaRecorder`), réécoute, upload, ré-enregistrement | M | Must | À faire |
+| A04 | Éditeur de leçon : composer une unité à partir de lexèmes et phrases, exercices générés par défaut, prévisualisation côté apprenant | L | Must | À faire |
+| A05 | Charte affichée dans le back-office et contrôle de saisie (caractère hors charte signalé) | S | Should | À faire |
+| A06 | Workflow brouillon → publié et tableau « ce qui manque » (mots sans audio, phrases sans traduction) | S | Should | À faire |
+
+### E3 — Piste « Lire »
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| L01 | Écran lettre : quatre formes, audio, mot d'exemple, animation du tracé (SVG) ; données de tracé des 31 lettres | L | Must | À faire |
+| L02 | Parcours par groupes de forme (ب ت ث ن ي, ج ح خ, …) dans l'ordre de fréquence, déblocage progressif | M | Must | À faire |
+| L03 | Exercices lettre : son → lettre, lettre → son, repérer la lettre dans un mot, reconnaître la forme (initiale, médiane, finale) | M | Must | À faire |
+| L04 | Écriture guidée sur canvas : tracer par-dessus le modèle, sans reconnaissance | M | Should | À faire |
+| L05 | Lecture de mots courts : assembler des lettres glissées, lire puis écouter l'audio | M | Must | À faire |
+
+### E4 — Piste « Parler »
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| P01 | Écran phrase : audio, arabizi, script arabe, traduction ; unités de survie (salutations, se présenter, chiffres, famille, marché) | M | Must | À faire |
+| P02 | Écoute-répétition : lecture normale et lente, replay, enchaînement des phrases d'une unité | S | Must | À faire |
+| P03 | Bascule arabizi visible / masqué selon l'avancement de la piste « Lire » | S | Should | À faire |
+| P04 | Mise en avant des mots transparents (tag `loan_origin`) | S | Could | À faire |
+
+### E5 — Répétition espacée
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| S01 | FSRS en .NET avec paramètres par défaut ; entités `UserCard`, `ReviewLog` | M | Must | À faire |
+| S02 | API : file de révision du jour, enregistrement d'une revue (note 1 à 4), recalcul de l'échéance | M | Must | À faire |
+| S03 | Écran de révision : carte recto / verso, audio, quatre boutons, compteur du jour | M | Must | À faire |
+| S04 | Introduction des nouvelles cartes à la fin d'une unité, limite quotidienne réglable | S | Must | À faire |
+
+### E6 — Exercices
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| X01 | Moteur d'exercice générique : type, contenu `jsonb`, correction, feedback, enregistrement du résultat | M | Must | À faire |
+| X02 | QCM : texte, audio → texte, texte → audio | S | Must | À faire |
+| X03 | Appariement : arabe ↔ français, audio ↔ arabe | S | Must | À faire |
+| X04 | Phrase à trous avec clavier virtuel et correction tolérante (normalisation T06) | M | Must | À faire |
+| X05 | Remise en ordre : mots d'une phrase, lettres d'un mot | S | Must | À faire |
+| X06 | Clavier virtuel tunisien : 28 lettres + ڨ ڤ پ, espace, retour, utilisable au doigt | M | Must | À faire |
+
+### E7 — Progression et engagement
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| G01 | Objectif quotidien, série, XP ; écran d'accueil « aujourd'hui » (révisions, prochaine leçon) | M | Must | À faire |
+| G02 | Vue d'ensemble : progression par unité et par lettre | S | Should | À faire |
+| G03 | Rappel quotidien par e-mail (job Hangfire ou Quartz) | S | Could | À faire |
+
+### E8 — Qualité et lancement
+
+| ID | Story | Taille | Priorité | Statut |
+| --- | --- | --- | --- | --- |
+| Q01 | Tests : unitaires (normalisation, FSRS), intégration API, un parcours de bout en bout | M | Must | À faire |
+| Q02 | Revue RTL et accessibilité : navigation clavier, contrastes, tailles de police arabes | S | Should | À faire |
+| Q03 | Bêta fermée : 5 à 10 débutants, collecte des retours, correctifs bloquants | M | Must | À faire |
+
+## 4. Production de contenu, en parallèle
+
+Ce n'est pas du développement, mais c'est le chemin critique : il démarre dès que M1 est livré et doit être fini avant M5. Chaque élément porte un enregistrement audio par la voix native.
+
+| Élément | Volume MVP | Prêt pour | Note |
+| --- | --- | --- | --- |
+| Lettres | 31, avec tracé et mot d'exemple | M2 | seed C03 + audio |
+| Mots | 300 à 400, avec racine et arabizi | M3 | ~50 par unité |
+| Phrases | 150, avec traduction | M3 | ~20 par unité |
+| Unités | 8 à 10 (survie, puis thèmes du quotidien) | M4 | composées dans A04 |
+| Exercices | générés par unité, relus à la main | M4 | X01–X05 |
+
+## 5. Explicitement hors MVP
+
+Reporté à la phase 2 ou 3 du cadrage, pour tenir les 16 semaines :
+
+- Mode hors ligne (cache IndexedDB, synchronisation) ; la PWA n'est qu'installable.
+- Leçons de grammaire (conjugaison, futur, négation), dictée audio, dictionnaire par racine.
+- Harakat et champ `arabic_vocalized`.
+- « S'enregistrer et comparer », tuteur LLM, decks utilisateur, dialogues de lecture.
+- Notifications push ; seul le rappel e-mail (G03) est envisagé, en « Could ».
+- Les points ouverts de la charte (section 8 de `02-charte-orthographique.md`).
+
+</script>
+<script type="text/markdown" id="md-04-plan-back-end">
+# Plan back-end
+
+26 octobre 2026
+
+Plan d'implémentation du back-end .NET en architecture hexagonale : un domaine sans dépendance technique, des ports (interfaces) qui le relient au monde, et des adapters (API, PostgreSQL, blob, auth, jobs) remplaçables. Trois modules indépendants, `Content`, `Learning` et `Identity`, dans un seul déployable.
+
+## 1. Principes
+
+La règle unique : **les dépendances pointent vers le domaine, jamais l'inverse.** Le domaine ne référence ni EF Core, ni ASP.NET, ni aucun SDK ; il ne connaît que ses propres types et les interfaces qu'il expose.
+
+- **Domaine** (`Domain`) : entités, agrégats, value objects, règles métier, événements de domaine, services de domaine (normalisation arabe, scheduler FSRS). Testable sans aucune infrastructure.
+- **Application** (`Application`) : les use cases, un par intention (`PublishLexeme`, `ReviewCard`). C'est là que vivent les **ports** : les ports *entrants* sont les use cases eux-mêmes, les ports *sortants* sont les interfaces dont ils ont besoin (`ILexemeRepository`, `IAudioStore`, `IClock`).
+- **Adapters** : tout ce qui touche au monde. *Entrants* : l'API HTTP, les jobs planifiés, le seed. *Sortants* : PostgreSQL via EF Core, le stockage blob, le traitement audio, ASP.NET Identity, l'envoi d'e-mails.
+- **Un hexagone par module.** `Content`, `Learning` et `Identity` ont chacun leur domaine, leurs ports et leurs adapters, et ne se parlent que par leurs ports publics ou par événements. Même déployable, mais frontières nettes : si un jour `Learning` doit sortir dans son propre service, rien dans le code ne s'y oppose.
+- **Pas de framework au milieu.** Pas de médiateur générique : un endpoint injecte son use case et l'appelle. Moins de magie, plus lisible, et les use cases restent des classes ordinaires.
+- **Composition à la racine.** Un seul projet `Api` compose les adapters et branche les ports, par module, au démarrage.
+
+## 2. Vue d'ensemble
+
+```mermaid
+flowchart LR
+  subgraph API["Api — adapters entrants"]
+    EP["Endpoints HTTP<br/>Minimal API"]
+    JOBS["Jobs planifiés<br/>Hangfire ou Quartz"]
+    SEED["Seed<br/>lettres (C03)"]
+  end
+
+  subgraph CONTENT["Content"]
+    CA["Application<br/>use cases back-office et lecture"]
+    CD["Domain<br/>Letter, Root, Lexeme, Sentence, Unit"]
+    CA --> CD
+  end
+
+  subgraph LEARNING["Learning"]
+    LA["Application<br/>use cases révision, progression"]
+    LD["Domain<br/>LearnerProfile, UserCard, ReviewLog"]
+    LA --> LD
+  end
+
+  subgraph IDENTITY["Identity"]
+    IA["Application<br/>Register, Login, RefreshToken"]
+    ID["Domain<br/>aucun : ASP.NET Identity suffit"]
+    IA --> ID
+  end
+
+  subgraph INFRA["Infrastructure — adapters sortants"]
+    PG["PostgreSQL<br/>EF Core, un schéma par module"]
+    BLOB["Blob audio<br/>MinIO, Azure, S3"]
+    FF["ffmpeg<br/>volume, Opus/MP3"]
+    ASPID["ASP.NET Identity<br/>comptes, JWT"]
+    MAIL["E-mail<br/>rappel quotidien"]
+  end
+
+  API --> CA
+  API --> LA
+  API --> IA
+  INFRA --> CA
+  INFRA --> LA
+  INFRA --> IA
+  LA -. "via Content.Contracts" .-> CONTENT
+
+  SK["SharedKernel : ArabicText, Arabizi, Result, IClock — référencé par tous les domaines"]
+  CD --- SK
+  LD --- SK
+```
+
+Les adapters d'entrée (à gauche) appellent les use cases ; les adapters de sortie (à droite) implémentent les ports déclarés dans l'application ; le domaine, au centre, ne dépend de rien. `Learning` ne lit le contenu publié qu'à travers `Content.Contracts`.
+
+## 3. Structure de la solution
+
+Une solution, un déployable (`Api`), trois modules à trois couches chacun, un noyau partagé minimal. Les flèches de dépendance : `Domain` → `SharedKernel` seulement ; `Application` → `Domain` ; `Infrastructure` → `Application` (elle implémente les ports) ; `Api` → tout, parce qu'elle compose.
+
+```text
+src/
+  Api/                            composition root : endpoints, auth, jobs, seed
+    Modules/Content/Endpoints/
+    Modules/Learning/Endpoints/
+    Modules/Identity/Endpoints/
+  SharedKernel/                   ArabicText, Arabizi, Result<T>, IClock, DomainEvent
+  Modules/
+    Content/
+      Content.Domain/             Letter, Root, Lexeme, Sentence, Unit ; règles ; événements
+      Content.Application/        use cases ; ports sortants (ILexemeRepository, IAudioStore…)
+      Content.Contracts/          ce que les autres modules peuvent voir : IPublishedContentReader, DTOs, événements
+      Content.Infrastructure/     EF Core (schéma content), blob, ffmpeg
+    Learning/
+      Learning.Domain/            LearnerProfile, UserCard, ReviewLog, ExerciseAttempt ; scheduler ; AnswerChecker
+      Learning.Application/       use cases ; ports sortants
+      Learning.Infrastructure/    EF Core (schéma learning), e-mail
+    Identity/
+      Identity.Application/       Register, Login, RefreshToken ; ICurrentUser
+      Identity.Infrastructure/    ASP.NET Identity (schéma identity), JWT
+tests/
+  Content.Domain.Tests/           unitaires purs, sans base
+  Content.Application.Tests/      use cases avec fakes des ports
+  Learning.Domain.Tests/          FSRS, AnswerChecker, streak
+  Learning.Application.Tests/
+  Api.IntegrationTests/           Testcontainers PostgreSQL, endpoints de bout en bout
+  Architecture.Tests/             règles de dépendance (NetArchTest ou ArchUnitNET)
+```
+
+`Learning` ne référence jamais `Content.Domain` ni `Content.Infrastructure` : il passe par `Content.Contracts`. C'est la seule dépendance entre modules, et elle est à sens unique.
+
+## 4. Domaine par module
+
+### Noyau partagé
+
+- `ArabicText` : value object construit en NFC, validé contre l'alphabet de la charte (28 lettres + ڨ ڤ پ, pas de harakat, pas de formes de présentation), avec une propriété `Normalized` (alifs unifiés, ى → ي, ة → ه, ق/ڨ selon la charte) servant aux comparaisons et à la recherche.
+- `Arabizi` : chaîne latine validée (lettres, 7, 3, 9, tiret, apostrophe).
+- `Variety` (`aeb`), `LoanOrigin` (fr, it, aucun), `AudioRef` (clé blob + durée), `ContentStatus` (brouillon, publié).
+- `Result<T>` et erreurs typées (`NotFound`, `Validation`, `Conflict`, `Forbidden`) ; `IClock` ; `DomainEvent` de base.
+
+### Content
+
+| Agrégat | Contenu | Règles |
+| --- | --- | --- |
+| `Letter` | code, quatre formes, groupe de forme, ordre d'enseignement, `extended`, mot d'exemple, audio | données de référence, modifiables mais jamais supprimées |
+| `Root` | trois ou quatre radicales, sens | unicité des radicales |
+| `Lexeme` | `ArabicText`, `Arabizi`, français, catégorie, racine, schème, genre, pluriel, `Variety`, `LoanOrigin`, audio, statut | publication refusée sans audio, français et arabizi ; `arabic` normalisé à la saisie ; unicité (arabic normalisé, catégorie) |
+| `Sentence` | arabe, arabizi, français, audio, lexèmes référencés, statut | publication refusée si un lexème référencé n'est pas publié |
+| `Unit` → `Lesson` → `LessonItem` / `Exercise` | unité ordonnée, leçons ordonnées, items (lexème ou phrase), exercices (type + charge `jsonb`) | publication refusée si un item n'est pas publié ; exercices générés par défaut puis éditables |
+
+Événements : `LexemePublished`, `SentencePublished`, `UnitPublished`, `AudioAttached`.
+
+### Learning
+
+| Agrégat | Contenu | Règles |
+| --- | --- | --- |
+| `LearnerProfile` | objectif quotidien, nouvelles cartes par jour, série, XP, dernière activité, progression par lettre et par unité | la série monte quand l'objectif du jour est atteint, tombe après un jour sans activité |
+| `UserCard` | apprenant, référence (lettre, lexème ou phrase), état FSRS (`stability`, `difficulty`, `due`, `reps`, `lapses`, `state`), dernière revue | `Review(rating, now)` délègue au scheduler et produit une entrée de `ReviewLog` ; une carte par (apprenant, référence) |
+| `ReviewLog` | carte, note (1 à 4), date, état avant / après | append-only, jamais modifié |
+| `ExerciseAttempt` | apprenant, exercice, réponse brute, réponse normalisée, correct, date | append-only |
+
+Services de domaine : `IReviewScheduler` (FSRS) et `AnswerChecker` (compare les `Normalized`, tolère la ponctuation et les espaces). Événements : `CardReviewed`, `UnitStarted`, `DailyGoalReached`.
+
+### Identity
+
+Pas de domaine propre : l'utilisateur ASP.NET Identity, deux rôles (`learner`, `admin`), et le port `ICurrentUser` exposé aux autres modules.
+
+## 5. Ports et adapters
+
+Chaque port est une interface déclarée dans `Application` (ou `Contracts` pour les ports inter-modules) ; l'adapter vit dans `Infrastructure` ou `Api` et n'est connu que de la racine de composition. En test, chaque port sortant a un fake en mémoire.
+
+| Port | Sens | Module | Adapter |
+| --- | --- | --- | --- |
+| Use cases (une classe par intention, `ExecuteAsync(input)`) | entrant | tous | endpoints Minimal API, jobs, seed |
+| `ILetterRepository`, `IRootRepository`, `ILexemeRepository`, `ISentenceRepository`, `IUnitRepository` | sortant | Content | EF Core + Npgsql, schéma `content` |
+| `IPublishedContentReader` (catalogue, unité publiée, items d'une leçon) | sortant, inter-modules | Content.Contracts → Learning | requête EF sur le schéma `content`, lecture seule |
+| `IAudioStore` (put, get, delete, URL signée) | sortant | Content | MinIO en local, Azure Blob ou S3 en prod |
+| `IAudioProcessor` (normaliser le volume, encoder Opus / MP3) | sortant | Content | ffmpeg lancé en processus |
+| `ILearnerProfileRepository`, `IUserCardRepository`, `IReviewLogRepository`, `IExerciseAttemptRepository` | sortant | Learning | EF Core, schéma `learning` |
+| `IReviewScheduler` (FSRS) | sortant | Learning | port .NET de py-fsrs, ou implémentation maison |
+| `IEmailSender` | sortant | Learning (G03) | SMTP ou API transactionnelle |
+| `ICurrentUser` | sortant | tous | `ClaimsPrincipal` de la requête |
+| `IClock` | sortant | tous | horloge système ; fake en test |
+| `IUnitOfWork` | sortant | tous | `SaveChanges` + transaction du DbContext du module |
+| `IDomainEventDispatcher` | sortant | tous | en mémoire, dans la transaction ; outbox plus tard |
+| Jobs planifiés (`SendDailyReminder`) | entrant | Learning | Hangfire ou Quartz, appelle un use case |
+
+## 6. Use cases du MVP
+
+Un use case = une classe, un input, un `Result<T>`. Les IDs renvoient aux stories du backlog.
+
+### Content, back-office
+
+- Lettres : `ListLetters`, `UpdateLetter` (C03, A02).
+- Racines : `CreateRoot`, `ListRoots` (A02).
+- Lexèmes : `CreateLexeme`, `UpdateLexeme`, `AttachAudio`, `PublishLexeme`, `SearchLexemes` (A01, A02, A03, A06).
+- Phrases : `CreateSentence`, `UpdateSentence`, `AttachAudio`, `PublishSentence`, `SearchSentences` (A01 à A03, A06).
+- Unités : `CreateUnit`, `AddLesson`, `SetLessonItems`, `GenerateDefaultExercises`, `UpdateExercise`, `PublishUnit`, `PreviewUnit` (A04).
+- Qualité : `GetMissingContentReport` (A06) ; `ExportPublishedContent` (C04).
+
+### Content, lecture apprenant
+
+- `GetPublishedAlphabet` (L01, L02), `GetUnitCatalog` et `GetPublishedUnit` (P01), `GetLessonExercises` (X01).
+
+### Learning
+
+- `StartUnit` : crée les `UserCard` des items, dans la limite quotidienne (S04).
+- `GetTodayQueue` (S02), `ReviewCard` (S01, S02, S03).
+- `SubmitExerciseAttempt` : corrige via `AnswerChecker`, enregistre, crédite l'XP (X01 à X05).
+- `RecordLetterProgress` (L03, L05), `SetDailyGoal`, `GetDashboard` (G01), `GetProgressOverview` (G02).
+- `SendDailyReminder`, déclenché par job (G03).
+
+### Identity
+
+- `Register`, `Login`, `RefreshToken`, `PromoteToAdmin` (T03).
+
+## 7. Transversal
+
+- **Normalisation arabe** : une seule implémentation, `ArabicText.Normalized`, dans le noyau partagé, avec les règles de la charte en tests paramétrés (T06). Utilisée à la saisie (on stocke la forme brute et la forme normalisée), à la correction (`AnswerChecker`) et à la recherche (index sur la colonne normalisée).
+- **Validation** : la forme des entrées à la frontière de l'application (validateurs FluentValidation ou faits main) ; les invariants métier dans le domaine, qui refuse un état invalide par `Result` plutôt que par exception.
+- **Erreurs** : `Result<T>` avec erreurs typées, converties en `ProblemDetails` par l'API (404, 400, 409, 403). Les exceptions sont réservées aux bugs et aux pannes.
+- **Transactions** : un use case = une transaction, ouverte et validée par `IUnitOfWork` dans un décorateur commun ; les événements de domaine sont dispatchés avant le commit, en mémoire. Un outbox n'est nécessaire que si un consommateur externe apparaît.
+- **Persistance** : un `DbContext` par module, un schéma PostgreSQL par module (`content`, `learning`, `identity`) dans la même base, migrations séparées. Value objects en conversions EF, charge d'exercice en `jsonb`, index sur `(arabic_normalized, pos)`.
+- **Sécurité** : JWT court + refresh token, rôle `admin` exigé sur tout le groupe d'endpoints back-office, CORS limité au front, secrets hors dépôt (user-secrets en local, variables d'environnement en prod), limitation de débit sur l'auth.
+- **Observabilité** : Serilog structuré, OpenTelemetry (traces HTTP et EF), health checks (`/health`, base et blob).
+- **Tests** : domaine en unitaire pur ; use cases avec fakes des ports ; API en intégration sur PostgreSQL via Testcontainers ; tests d'architecture qui échouent si `Domain` référence autre chose que `SharedKernel` ou si `Learning` touche `Content.Domain`.
+
+## 8. Ordre d'implémentation
+
+Aligné sur les jalons du backlog ; chaque étape laisse une API testable.
+
+1. **M0 Socle.** `SharedKernel` (`ArabicText`, `Arabizi`, `Result`, `IClock`) avec ses tests ; squelette des trois modules et `Architecture.Tests` qui verrouillent les dépendances dès le premier jour ; `DbContext`, schémas et migrations ; Identity + JWT ; `IAudioStore` avec MinIO en local ; seed des 31 lettres. (T01, T03, T04, T06, C01, C03, T05)
+2. **M1 Back-office.** `Content.Domain` complet ; use cases de saisie, d'audio et de publication ; endpoints admin ; `IAudioProcessor` ffmpeg ; rapport « ce qui manque » ; export JSON. (C02, C04, A01 à A06 côté API)
+3. **M2 Lecture.** Endpoints publiés (alphabet, catalogue, unité) via `Content.Contracts` ; `LearnerProfile` et progression par lettre. (L01 à L03, L05 côté API)
+4. **M3 SRS.** `UserCard`, `ReviewLog`, `IReviewScheduler` ; `StartUnit`, `GetTodayQueue`, `ReviewCard`. (S01 à S04, P01)
+5. **M4 Exercices et progression.** `ExerciseAttempt`, `AnswerChecker`, `SubmitExerciseAttempt` ; objectif, série, XP, `GetDashboard`. (X01 à X05, G01)
+6. **M5 Bêta.** Tests d'intégration de bout en bout, observabilité, durcissement (CORS, débit, secrets), rappel e-mail si le temps le permet. (Q01, G03)
+
+## 9. Décisions techniques à trancher
+
+| Décision | Options | Recommandation |
+| --- | --- | --- |
+| Version de .NET | .NET 10 (LTS) ou .NET 9 | .NET 10 |
+| Style d'API | Minimal APIs groupées par module, ou contrôleurs | Minimal APIs, un `MapGroup` par module |
+| Appel des use cases | injection directe dans l'endpoint, ou médiateur | injection directe ; MediatR est passé sous licence commerciale en 2025 et n'apporte rien ici |
+| FSRS | port .NET de py-fsrs ([FsrsSharp](https://www.nuget.org/packages/FsrsSharp), [Fsrs.Sharp](https://www.nuget.org/packages/Fsrs.Sharp), [FSRS.Core](https://www.nuget.org/packages/fsrs.core)), ou implémentation maison | démarrer avec FsrsSharp derrière `IReviewScheduler`, basculer en maison si la bibliothèque n'est pas maintenue |
+| Stockage audio | MinIO (API S3) en local, Azure Blob ou S3 en prod | MinIO partout en dev, choix prod selon l'hébergeur, les deux derrière `IAudioStore` |
+| Traitement audio | ffmpeg en processus, ou bibliothèque managée | ffmpeg, encodage Opus + repli MP3 pour Safari |
+| Jobs | Hangfire (tableau de bord) ou Quartz | à décider seulement si G03 entre dans le MVP |
+| DbContext | un par module ou un seul | un par module, même base, un schéma chacun |
+| Événements | en mémoire ou outbox | en mémoire pour le MVP |
+| Hébergement | conteneur unique (API + PostgreSQL + MinIO en compose) sur un VPS, ou PaaS | compose sur VPS pour la bêta, à revoir avant ouverture |
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+const ids = ["01-cadrage","02-charte-orthographique","03-backlog-mvp","04-plan-back-end"];
+const main = document.getElementById('content');
+const toc = document.getElementById('toc');
+const nav = document.querySelector('nav.docs');
+const AR = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]+(?:[\s\u060C\u061F]+[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]+)*/g;
+
+const slug = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+
+// Isole et agrandit chaque segment en arabe pour un affichage RTL correct au milieu du français.
+function wrapArabic(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => n.parentElement.closest('pre, script') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+  });
+  const nodes = [];
+  while (walker.nextNode()) if (walker.currentNode.data.search(AR) !== -1) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    const frag = document.createDocumentFragment();
+    let last = 0;
+    node.data.replace(AR, (m, i) => {
+      frag.append(node.data.slice(last, i));
+      const span = document.createElement('span');
+      span.className = 'ar'; span.lang = 'ar'; span.dir = 'rtl'; span.textContent = m;
+      frag.append(span);
+      last = i + m.length;
+    });
+    frag.append(node.data.slice(last));
+    node.replaceWith(frag);
+  }
+}
+
+function isDark() {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+async function render() {
+  const [docId, anchor] = decodeURIComponent(location.hash.slice(1)).split('/');
+  const id = ids.includes(docId) ? docId : ids[0];
+  main.innerHTML = marked.parse(document.getElementById('md-' + id).textContent);
+
+  main.querySelectorAll('table').forEach((t) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    t.replaceWith(wrap); wrap.append(t);
+  });
+  main.querySelectorAll('code.language-mermaid').forEach((c) => {
+    const pre = document.createElement('pre');
+    pre.className = 'mermaid'; pre.textContent = c.textContent;
+    c.parentElement.replaceWith(pre);
+  });
+  // Liens entre documents : "02-charte-orthographique.md" -> page correspondante.
+  main.querySelectorAll('code').forEach((c) => {
+    const m = c.textContent.match(/^(\d\d-[\w-]+)\.md$/);
+    if (m && ids.includes(m[1])) {
+      const a = document.createElement('a'); a.href = '#' + m[1];
+      c.replaceWith(a); a.append(c);
+    }
+  });
+
+  toc.innerHTML = '';
+  main.querySelectorAll('h2, h3').forEach((h) => {
+    h.id = slug(h.textContent);
+    const a = document.createElement('a');
+    a.href = '#' + id + '/' + h.id; a.textContent = h.textContent; a.className = h.tagName.toLowerCase();
+    toc.append(a);
+  });
+  wrapArabic(main);
+  wrapArabic(toc);
+
+  nav.querySelectorAll('.links a').forEach((a) => a.hash === '#' + id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  nav.classList.remove('open');
+  document.title = main.querySelector('h1')?.textContent + ' — Documentation';
+
+  mermaid.initialize({ startOnLoad: false, theme: isDark() ? 'dark' : 'default' });
+  await mermaid.run({ nodes: main.querySelectorAll('pre.mermaid') });
+
+  const target = anchor && document.getElementById(anchor);
+  target ? target.scrollIntoView() : window.scrollTo(0, 0);
+}
+
+document.querySelector('.menu-btn').addEventListener('click', (e) => {
+  const open = nav.classList.toggle('open');
+  e.currentTarget.setAttribute('aria-expanded', open);
+});
+document.querySelector('.theme-btn').addEventListener('click', () => {
+  document.documentElement.dataset.theme = isDark() ? 'light' : 'dark';
+  try { localStorage.setItem('theme', document.documentElement.dataset.theme); } catch {}
+  render();
+});
+try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
+addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>
