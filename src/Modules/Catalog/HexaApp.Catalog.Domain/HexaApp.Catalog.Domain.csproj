@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../../HexaApp.SharedKernel/HexaApp.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

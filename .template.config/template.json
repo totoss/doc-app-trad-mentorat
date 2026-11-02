@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Anthony DO",
+  "classifications": ["Web", "API", "DDD", "Hexagonal"],
+  "identity": "HexaApp.Ddd.Hexagonal",
+  "name": "Squelette DDD et architecture hexagonale (.NET)",
+  "description": "Monolithe modulaire : SharedKernel, un module exemple Domain / Application / Infrastructure, API Minimal, EF Core PostgreSQL, tests unitaires, d'architecture et d'intégration.",
+  "shortName": "hexa-ddd",
+  "sourceName": "HexaApp",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            ".template.config/**",
+            ".git/**",
+            ".claude/**",
+            "**/.DS_Store",
+            "docs/**",
+            "README.md"
+          ]
+        }
+      ]
+    }
+  ]
+}

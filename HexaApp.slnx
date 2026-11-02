@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HexaApp.Api/HexaApp.Api.csproj" />
+    <Project Path="src/HexaApp.SharedKernel/HexaApp.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Catalog/">
+    <Project Path="src/Modules/Catalog/HexaApp.Catalog.Application/HexaApp.Catalog.Application.csproj" />
+    <Project Path="src/Modules/Catalog/HexaApp.Catalog.Domain/HexaApp.Catalog.Domain.csproj" />
+    <Project Path="src/Modules/Catalog/HexaApp.Catalog.Infrastructure/HexaApp.Catalog.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HexaApp.Api.IntegrationTests/HexaApp.Api.IntegrationTests.csproj" />
+    <Project Path="tests/HexaApp.Architecture.Tests/HexaApp.Architecture.Tests.csproj" />
+    <Project Path="tests/HexaApp.Catalog.Application.Tests/HexaApp.Catalog.Application.Tests.csproj" />
+    <Project Path="tests/HexaApp.Catalog.Domain.Tests/HexaApp.Catalog.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
