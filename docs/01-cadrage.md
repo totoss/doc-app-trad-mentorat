@@ -1,10 +1,10 @@
-# Appli d'apprentissage de l'arabe — Cadrage
+# Appli d'apprentissage du tunisien — Cadrage
 
 26 octobre 2026
 
 ## Contexte
 
-Webapp d'apprentissage de l'arabe pour francophones : back-end .NET, front Angular, PWA dès le squelette pour une intégration mobile ultérieure (pas d'application native pour l'instant).
+Webapp d'apprentissage de l'arabe tunisien pour francophones : back-end .NET, front Angular, PWA dès le squelette pour une intégration mobile ultérieure (pas d'application native pour l'instant).
 
 L'arabe n'est pas une langue « comme les autres » à enseigner, et la plupart des apps généralistes le traitent mal. Ses spécificités conditionnent les features avant la stack : c'est par là que commence le cadrage.
 
@@ -39,7 +39,7 @@ C'est la grande opportunité que les apps génériques ratent : montrer que كت
 
 ### Les emprunts, un atout pour les francophones
 
-Le tunisien est truffé d'emprunts au français et à l'italien (تيليفون, بورطابل, كوجينة, بابور). Les taguer « mots transparents » donne au débutant des victoires rapides dès la première semaine.
+Le tunisien est truffé d'emprunts au français et à l'italien (تيليفون, پورطابل, كوجينة, بابور). Les taguer « mots transparents » donne au débutant des victoires rapides dès la première semaine.
 
 ## 2. Périmètre fonctionnel par phases
 
@@ -47,8 +47,8 @@ Le tunisien est truffé d'emprunts au français et à l'italien (تيليفون,
 
 Premier chantier : le back-office, parce que la production de contenu démarre avant tout le reste.
 
-- **Back-office contenu** (rôle admin) : saisie des lettres, mots, phrases, leçons et exercices directement en base ; enregistrement audio depuis le navigateur ; statut brouillon / publié ; export JSON de sauvegarde.
-- **Piste « Lire »** : alphabet tunisien (28 lettres + ڨ ڤ پ), groupé par forme (ب ت ث ن ي, puis ج ح خ, …) et ordonné par fréquence, audio, tracé animé (SVG), écriture guidée sur canvas (sans reconnaissance au début).
+- **Back-office contenu** (rôle admin) : saisie des lettres, mots, phrases, leçons et exercices directement en base ; enregistrement audio depuis le navigateur ; statut brouillon / publié ; export JSON de sauvegarde si le temps le permet.
+- **Piste « Lire »** : alphabet tunisien (28 lettres + ڨ ڤ پ), groupé par forme (ب ت ث ن ي, puis ج ح خ, …) et ordonné par fréquence, audio, tracé animé (SVG) ; écriture guidée sur canvas (sans reconnaissance) si le temps le permet.
 - **Piste « Parler »**, en parallèle dès le premier jour : phrases de survie en audio + arabizi, script arabe affiché mais non exigé. Les deux pistes fusionnent une fois l'alphabet acquis, pour éviter l'effet « je ne peux rien dire avant trois semaines ».
 - Vocabulaire avec **répétition espacée** : algorithme FSRS plutôt que SM-2 (nettement meilleur, implémentations .NET existantes). Chaque carte : arabe, arabizi, français, audio, exemple, racine, tag « mot transparent ».
 - 3 à 4 types d'exercices : QCM, appariement, phrase à trous, remise en ordre, avec le clavier virtuel tunisien. Correction tolérante (voir §4).
@@ -97,7 +97,7 @@ Composants standalone + signals, `@angular/pwa` dès le squelette (gratuit à me
 - Ne jamais stocker les formes de présentation (U+FB50–U+FDFF) ; laisser le navigateur faire le *shaping*.
 - Modéliser `Lexeme` avec : `arabic`, `arabic_vocalized` (vide dans les premières itérations), `latin` (arabizi), `french`, `pos`, `root_id`, `pattern`, `gender`, `plural` (les pluriels brisés sont irréguliers, il faut les stocker), `variety` (défaut `aeb`), `loan_origin` (fr / it / aucun), `audio_url`, `status`.
 - Modéliser `Letter` avec un flag `extended` (ڨ ڤ پ), un groupe de forme et un ordre d'enseignement.
-- Séparer `Card` (contenu) de `UserCard` (état SRS : `due`, `stability`, `difficulty`, `reps`) et garder un `ReviewLog` : c'est ce qui permettra plus tard de recalibrer l'algorithme sur les vraies données.
+- Séparer le contenu (lettre, lexème, phrase) de son état d'apprentissage : une `UserCard` par apprenant et par contenu référencé (état SRS : `due`, `stability`, `difficulty`, `reps`), et garder un `ReviewLog` : c'est ce qui permettra plus tard de recalibrer l'algorithme sur les vraies données.
 
 ## 5. Ce qu'il faut trancher avant de coder
 
@@ -107,6 +107,6 @@ Trois décisions, par ordre d'impact :
 - [x] **Qui produit le contenu ?** → **Auto-produit, saisi directement en base via le back-office** (pas de CSV intermédiaire). C'est le vrai goulot d'étranglement, bien plus que le code.
 - [x] **Quel public ?** → **Débutant complet qui ne lit pas l'alphabet.**
 
-Les trois points sont fixés ; l'étape suivante est la charte orthographique, puis une spec détaillée et un backlog priorisé pour le MVP, back-office en tête.
+Les trois points sont fixés ; la charte orthographique, le backlog priorisé du MVP (back-office en tête) et le plan back-end en découlent.
 
 Voir aussi : `02-charte-orthographique.md`, `03-backlog-mvp.md`, `04-plan-back-end.md`.
