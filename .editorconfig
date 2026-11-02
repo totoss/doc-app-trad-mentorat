@@ -1,0 +1,24 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{json,yml,yaml,csproj,props,slnx}]
+indent_size = 2
+
+[*.cs]
+# Règles pensées pour les bibliothèques publiques, qui contredisent le vocabulaire DDD usuel :
+# CA1000 interdit les fabriques statiques sur Result<T> ; CA1711 refuse IDomainEventHandler ;
+# CA1716 refuse le type Error (mot réservé en VB).
+dotnet_diagnostic.CA1000.severity = none
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1716.severity = none
+# Pas de SynchronizationContext dans ASP.NET Core : ConfigureAwait(false) n'apporte rien ici.
+dotnet_diagnostic.CA2007.severity = none
+
+[**/Migrations/*.cs]
+generated_code = true

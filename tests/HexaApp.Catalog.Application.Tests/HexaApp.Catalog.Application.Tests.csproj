@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../src/Modules/Catalog/HexaApp.Catalog.Application/HexaApp.Catalog.Application.csproj" />
+  </ItemGroup>
+</Project>

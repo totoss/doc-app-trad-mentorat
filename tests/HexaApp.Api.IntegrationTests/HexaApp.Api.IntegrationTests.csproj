@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/HexaApp.Api/HexaApp.Api.csproj" />
+    <ProjectReference Include="../HexaApp.Catalog.Application.Tests/HexaApp.Catalog.Application.Tests.csproj" />
+  </ItemGroup>
+</Project>
